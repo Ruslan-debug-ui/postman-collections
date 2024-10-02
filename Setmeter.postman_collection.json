@@ -1,0 +1,1101 @@
+{
+	"info": {
+		"_postman_id": "7fd3cb6f-4016-4bcd-b2d3-d7e343e7bf81",
+		"name": "Setmeter",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "21596013"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Positive - Token request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.environment.set(\"varToken\",jsonData.access_token);\r",
+									"\r",
+									"console.log(jsonData.access_token);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "mediascope_api",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "p3C36dpFg%zNMkVxByqy",
+									"type": "text"
+								}
+							]
+						},
+						"url": "https://api1.setmeter.ru/api/v1/auth/token"
+					},
+					"response": []
+				},
+				{
+					"name": "Negative - No login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 422\", function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									"pm.test(\"Body matches string\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"field required\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "mediascope_api",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": "p3C36dpFg%zNMkVxByqy",
+									"type": "text"
+								}
+							]
+						},
+						"url": "https://api1.setmeter.ru/api/v1/auth/token"
+					},
+					"response": []
+				},
+				{
+					"name": "Negative - No password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 422\", function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body matches string\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"field required\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "mediascope_api",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "p3C36dpFg%zNMkVxByqy",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": "https://api1.setmeter.ru/api/v1/auth/token"
+					},
+					"response": []
+				},
+				{
+					"name": "Negative - Me Expired Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"pm.test(\"Body matches string\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"TOKEN_EXPIRED\");\r",
+									"});\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1lZGlhc2NvcGVfYXBpIiwic2NvcGUiOiJhY2Nlc3MiLCJpYXQiOjE3MTU5NjMwMzQsImV4cCI6MTcxNTk2NjYzNH0.QpAWsPXLEGTRuCVMZQCUJ1OvgqzuWuMMRa-JcbU2dVo"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://api1.setmeter.ru/api/v1/users/me"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Positive - my device",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{varToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://api1.setmeter.ru/api/v1/users/stlw455wpb"
+					},
+					"response": []
+				},
+				{
+					"name": "Negative - Non existing ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{varToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://api1.setmeter.ru/api/v1/users/zzzzz"
+					},
+					"response": []
+				},
+				{
+					"name": "Positive - List of users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{varToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://api1.setmeter.ru/api/v1/users"
+					},
+					"response": []
+				},
+				{
+					"name": "Positive - My login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{varToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://api1.setmeter.ru/api/v1/users/me"
+					},
+					"response": []
+				},
+				{
+					"name": "Positive - User Activity",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{varToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://api1.setmeter.ru/api/v1/users/stlw455wpb/activity"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Control",
+			"item": [
+				{
+					"name": "Positive - Groups List",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{varToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://api1.setmeter.ru/api/v1/groups"
+					},
+					"response": []
+				},
+				{
+					"name": "Positive - Read Group",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{varToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://api1.setmeter.ru/api/v1/groups/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Positive - Group Users List",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{varToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://api1.setmeter.ru/api/v1/groups/1/users"
+					},
+					"response": []
+				},
+				{
+					"name": "Positive - Projects",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{varToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://api1.setmeter.ru/api/v1/projects"
+					},
+					"response": []
+				},
+				{
+					"name": "Positive - Read Project",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{varToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://api1.setmeter.ru/api/v1/projects/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Positive - List Project Groups",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{varToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://api1.setmeter.ru/api/v1/projects/1/groups"
+					},
+					"response": []
+				},
+				{
+					"name": "Positive - List Project Users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{varToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://api1.setmeter.ru/api/v1/projects/1/users"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Households",
+			"item": [
+				{
+					"name": "Positive - List Households",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{varToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://api1.setmeter.ru/api/v1/households"
+					},
+					"response": []
+				},
+				{
+					"name": "Positive - Read Household",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{varToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://api1.setmeter.ru/api/v1/households/10"
+					},
+					"response": []
+				},
+				{
+					"name": "Positive - List Household Panelists",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{varToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://api1.setmeter.ru/api/v1/households/1/panelists"
+					},
+					"response": []
+				},
+				{
+					"name": "Positive - List Household Meters",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{varToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://api1.setmeter.ru/api/v1/households/1/meters"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Panelists",
+			"item": [
+				{
+					"name": "Positive - Read Panelist",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{varToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://api1.setmeter.ru/api/v1/panelists/1"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Messaging",
+			"item": [
+				{
+					"name": "List Messages",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{varToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://api1.setmeter.ru/api/v1/push/messages"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Message",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{varToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://api1.setmeter.ru/api/v1/push/messages/2d4a17fc-cfcd-4be5-a468-01a9b4481f3a"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Support",
+			"item": [
+				{
+					"name": "List Tickets",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{varToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://api1.setmeter.ru/api/v1/support/tickets"
+					},
+					"response": []
+				},
+				{
+					"name": "Read Tickets",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{varToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://api1.setmeter.ru/api/v1/support/tickets/1"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Statistics",
+			"item": [
+				{
+					"name": "Get Aggregated Total Objects",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{varToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://api1.setmeter.ru/api/v1/stats/aggregated/total"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Aggregated Active Devices",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{varToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://api1.setmeter.ru/api/v1/stats/aggregated/active"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Aggregated Active Recognition Devices",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{varToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://api1.setmeter.ru/api/v1/stats/aggregated/active-recognition"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Aggregated Online",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{varToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://api1.setmeter.ru/api/v1/stats/aggregated/online"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Category Viewing Stats",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{varToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://api1.setmeter.ru/api/v1/stats/meters/stlw455wpb/tv-viewing"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Devices",
+			"item": []
+		},
+		{
+			"name": "Admin Area",
+			"item": [
+				{
+					"name": "List Model Templates",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{varToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://api1.setmeter.ru/api/v1/admin/model-templates"
+					},
+					"response": []
+				},
+				{
+					"name": "Read Model Templates",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{varToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://api1.setmeter.ru/api/v1/admin/model-templates/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Form Fields",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{varToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://api1.setmeter.ru/api/v1/admin/forms/meter-config"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Background tasks",
+			"item": [
+				{
+					"name": "Read Task Status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{varToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://api1.setmeter.ru/api/v1/tasks/1"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "Tonen_1",
+			"value": "eyJ1c2VybmFtZSI6Im1lZGlhc2NvcGVfYXBpIiwic2NvcGUiOiJhY2Nlc3MiLCJpYXQiOjE3MTYwNjA0MzYsImV4cCI6MTcxNjA2NDAzNn0"
+		}
+	]
+}
